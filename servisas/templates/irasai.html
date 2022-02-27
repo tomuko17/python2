@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if visi_irasai %}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col" class="text-center">Gedimas</th>
+            <th scope="col" class="text-center">Masina</th>
+            <th scope="col" class="text-center">Suma</th>
+            <th scope="col" class="text-left">Kada</th>
+        </tr>
+    </thead>
+{% for irasas in visi_irasai.items %}<tr>
+    <th scope="row">{{ irasas.id }}</th>
+    <td class="text-right">{{ irasas.problema }}</td>
+    <td class="text-right">{{ irasas.masina }}</td>
+    
+    <td class="text-right">{{ irasas.suma }}</td>
+    <td>{{ datetime.strftime(irasas.sukurta, "%Y-%m-%d %H:%M:%S") }}</td>
+</tr>{% endfor %}
+</table>
+{% for page_num in visi_irasai.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+    {% if page_num %}
+        {% if visi_irasai.page == page_num %}
+            <a class="btn btn-info mb-4" href="{{ url_for('records', page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+            <a class="btn btn-outline-info mb-4" href="{{ url_for('records', page=page_num) }}">{{ page_num }}</a>
+        {% endif %}
+    {% else %}
+    ...
+    {% endif %}
+{% endfor %}
+{% endif %}
+{% endblock content %}

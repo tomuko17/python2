@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="content-section">
+    <h1 class="bg-danger text-white p-4">Klaida {{ klaida }}</h1>
+    {% if klaida == 403 %}
+    Jūs neturite teisės pasiekti šio puslapio
+    {% elif klaida == 404 %}
+    Puslapis nerastas. OOOPS.
+    {% elif klaida == 500 %}
+    Kažkas čia negerai...
+    {% else %}
+    Nežinau kokia klaida
+    {% endif %}
+</div>
+{% endblock content %}
