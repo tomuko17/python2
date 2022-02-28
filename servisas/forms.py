@@ -51,7 +51,7 @@ class ProfilioForma(FlaskForm):
         if vartotojas:
             raise ValidationError('Vartotojas su jūsų nurodytu el.pašto adresu jau egzistuoja.')
 
-class RemontoForma(FlaskForm):
+class IvedimoForma(FlaskForm):
     gamintojas = StringField('Gamintojas', [DataRequired()])
     modelis = StringField('Modelis', [DataRequired()])
     metai = StringField('Pagaminmo metai', [DataRequired()])
@@ -66,7 +66,7 @@ def car_query():
 
 class IrasasForma(FlaskForm):
     problema = StringField('Gedimo aprasymas', [DataRequired()])
-    masina_id = QuerySelectField('Pasirinkite automobili',
+    masina = QuerySelectField('Pasirinkite automobili',
         query_factory=car_query, 
         allow_blank=False, 
         get_label=lambda obj: str(f'{obj.gamintojas} {obj.modelis}, {obj.reg_nr}'), )

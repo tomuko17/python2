@@ -99,7 +99,7 @@ def profilis():
 @app.route('/remontas', methods=['GET', 'POST'])
 @login_required
 def remontas():
-    form = forms.RemontoForma()
+    form = forms.IvedimoForma()
     if form.validate_on_submit():
         naujas_darbas = Masina(
             gamintojas = form.gamintojas.data,
@@ -130,7 +130,7 @@ def irasas():
     if form.validate_on_submit():
         naujas_irasas = Irasas(
             problema = form.problema.data,
-            masina_id = form.masina_id.data,
+            masina_id = form.masina.data.id,
             statusas = form.statusas.data,
             suma = form.suma.data
         )

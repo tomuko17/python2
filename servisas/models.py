@@ -30,7 +30,7 @@ class Masina(db.Model):
     vartotojas = db.relationship("Vartotojas", lazy=True)
 
     def __repr__(self) -> str:
-        return f'{self.gamintojas} {self.modelis} {self.reg_nr} {self.metai}'
+        return f'{self.gamintojas} {self.modelis} {self.reg_nr} '
 
     def __init__(self, gamintojas, modelis, reg_nr, vartotojas_id):
         self.gamintojas = gamintojas
@@ -50,7 +50,7 @@ class Irasas(db.Model):
     masina = db.relationship("Masina", lazy=True)
 
     def __repr__(self) -> str:
-        return f'{self.problema} @ {self.suma} {self.sukurta}'
+        return f'{self.problema} @ {self.masina} '
 
 
 class LimitedAdmin(ModelView):
