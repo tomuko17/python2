@@ -96,12 +96,12 @@ def profilis():
     return render_template('profilis.html', current_user=current_user, form=form, nuotrauka=nuotrauka)
 
 
-@app.route('/remontas', methods=['GET', 'POST'])
+@app.route('/ivedimas', methods=['GET', 'POST'])
 @login_required
-def remontas():
+def ivedimas():
     form = forms.IvedimoForma()
     if form.validate_on_submit():
-        naujas_darbas = Masina(
+        nauja_masina = Masina(
             gamintojas = form.gamintojas.data,
             modelis = form.modelis.data,
             metai = form.metai.data,
@@ -110,18 +110,18 @@ def remontas():
             reg_nr = form.reg_nr.data,
             vartotojas_id = current_user.id
         )
-        db.session.add(naujas_darbas)
+        db.session.add(nauja_masina)
         db.session.commit()
         flash('Registracija atlikta sėkmingai.', 'success')
         return redirect(url_for('home'))
-    return render_template('remontas.html', form=form, current_user=current_user)
+    return render_template('ivedimas.html', form=form, current_user=current_user)
 
 @app.route('/irasai')
 @login_required
 def records():
     page = request.args.get('page', 1, type=int)
-    visi_irasai = Irasas.query.filter_by(masina_id=current_user.id).order_by(Irasas.sukurta.desc()).paginate(page=page, per_page=5)
-    return render_template("irasai.html", visi_irasai=visi_irasai, datetime=datetime)
+    visi_masinos = Masina.query.filter_by(vartotojas_id=current_user.id).paginate(page=page, per_page=5)
+    return render_template("irasai.html", visi_masinos=visi_masinos)
 
 @app.route('/irasas', methods=['GET', 'POST'])
 @login_required

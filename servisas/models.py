@@ -30,7 +30,7 @@ class Masina(db.Model):
     vartotojas = db.relationship("Vartotojas", lazy=True)
 
     def __repr__(self) -> str:
-        return f'{self.gamintojas} {self.modelis} {self.reg_nr} '
+        return f'{self.gamintojas} {self.modelis} {self.metai} {self.reg_nr} '
 
     def __init__(self, gamintojas, modelis, reg_nr, vartotojas_id):
         self.gamintojas = gamintojas
