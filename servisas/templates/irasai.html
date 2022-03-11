@@ -1,37 +1,27 @@
 {% extends 'base.html' %}
 
 {% block content %}
-{% if visi_masinos %}
-<table class="table">
-    <thead>
-        <tr>
-            <th scope="col">Registracija remontui</th>
-            <th scope="col" class="text-center">Gamintojas</th>
-            <th scope="col" class="text-center">Modelis</th>
-            <th scope="col" class="text-center">Variklis</th>
-            <th scope="col" class="text-left">Registracijos nr.</th>
+{% if visi_irasai %}
+    <legend class="border-bottom mb-4">Automobilio {{ masina.gamintojas }} (registracijos nr. {{ masina.reg_nr }}) taisymo istorija</legend>
+    <a role="button" class="btn btn-primary float-left" href="{{ url_for('automobilis') }}">[Grįžti]</a>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col" class="text-center">Sukurta</th>
+                <th scope="col" class="text-center">Suma</th>
+                <th scope="col" class="text-center">Tekstas</th>
+                <th scope="col" class="text-center">Remonto Statusas</th>    
+            </tr>
+        </thead>
+    {% for irasas in visi_irasai %}<tr>
+            <td class="text-center"> {{ irasas.sukurta }}</td>
+            <td class="text-center"> {{ irasas.suma }}</td>
+            <td class="text-center"> {{ irasas.problema }}</td>
+            <td class="text-center"> {{ irasas.statusas }}</td>
         </tr>
-    </thead>
-{% for masin in visi_masinos.items %}<tr>
-    <th scope="row"><a href="{{ url_for('ivedimas', masina_id=masin.id) }}">{{ masin.id }}</a></th>
-    <td class="text-right">{{ masin.gamintojas }}</td>
-    <td class="text-right">{{ masin.modelis }}</td>
-    <td class="text-right">{{ masin.variklis }}</td>
-    
-    <td class="text-right">{{ masin.reg_nr }}</td>
-    <td></td>
-</tr>{% endfor %}
-</table>
-{% for page_num in visi_masinos.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
-    {% if page_num %}
-        {% if visi_masinos.page == page_num %}
-            <a class="btn btn-info mb-4" href="{{ url_for('records', page=page_num) }}">{{ page_num }}</a>
-        {% else %}
-            <a class="btn btn-outline-info mb-4" href="{{ url_for('records', page=page_num) }}">{{ page_num }}</a>
-        {% endif %}
-    {% else %}
-    ...
-    {% endif %}
-{% endfor %}
+
+    {% endfor %}
+    </table>
+
 {% endif %}
 {% endblock content %}

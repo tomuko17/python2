@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if visi_irasai %}
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Redaguoti įrašą</th>
+            <th scope="col" class="text-center">Gamintojas</th>
+            <th scope="col" class="text-center">Registracijos numeris</th>
+            <th scope="col" class="text-center">Sukurta</th>
+            <th scope="col" class="text-center">Suma</th>
+            <th scope="col" class="text-center">Gedimo aprasymas</th>
+            <th scope="col" class="text-center">Remonto Statusas</th>           
+        </tr>
+    </thead>
+{% for irasas in visi_irasai %}<tr>
+    {% if irasas.statusas == "grazinta" %}
+        <td></td> 
+        {% for masina in visi_masinos %}
+            {% if masina.id == irasas.masina_id %}
+                <td class="text-decoration-line-through text-center"> {{ masina.gamintojas }} </td>
+                <td class="text-decoration-line-through text-center"> {{ masina.reg_nr }} </td>
+            {% endif %}
+        {% endfor %}
+        <td class="text-decoration-line-through text-center"> {{ irasas.sukurta }} </td>
+        <td class="text-decoration-line-through text-center"> {{ irasas.suma }} </td>
+        <td class="text-decoration-line-through text-center"> {{ irasas.problema }} </td>
+        <td class="text-decoration-line-through text-center text-danger"> {{ irasas.statusas }} </td>
+    {% else %}
+        <td scope="row"><a role="button" class="btn btn-info btn-sm float-left" href="http://127.0.0.1:5000/iraso_koregavimas/{{ irasas.id }}">[Spausti]</a></td>
+        {% for masina in visi_masinos %}
+            {% if masina.id == irasas.masina_id %}
+                <td class="text-center"> {{ masina.gamintojas }} </td>
+                <td class="text-center"> {{ masina.reg_nr }} </td>
+            {% endif %}
+        {% endfor %}
+        <td class="text-center"> {{ irasas.sukurta }} </td>
+        <td class="text-center"> {{ irasas.suma }} </td>
+        <td class="text-center"> {{ irasas.problema }} </td>
+        {% if irasas.statusas == "naujas" %}
+            <td class="text-center text-success"> {{ irasas.statusas }} </td>
+        {% else %}
+            <td class="text-center"> {{ irasas.statusas }} </td>
+        {% endif %}
+    </tr>
+    {% endif %}
+{% endfor %}
+</table>
+
+{% endif %}
+{% endblock content %}

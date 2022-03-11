@@ -17,7 +17,7 @@ bcrypt = Bcrypt(app)
 
 @app.route('/')
 def home():
-    flash('Sveiki atvykę, prisijungėte prie sistemos', 'info')
+    flash('Sveiki atvykę, prisijungite prie sistemos', 'info')
     return render_template('base.html', current_user=current_user)
 
 @app.route('/admin')
@@ -96,9 +96,10 @@ def profilis():
     return render_template('profilis.html', current_user=current_user, form=form, nuotrauka=nuotrauka)
 
 
-@app.route('/ivedimas', methods=['GET', 'POST'])
+@app.route('/ivedimas', methods=['GET', 'POST']) # naujas automobilis
 @login_required
 def ivedimas():
+    flash('Čia galite įtraukti savo automobilį į sistemą.', 'info')
     form = forms.IvedimoForma()
     if form.validate_on_submit():
         nauja_masina = Masina(
@@ -112,35 +113,69 @@ def ivedimas():
         )
         db.session.add(nauja_masina)
         db.session.commit()
-        flash('Registracija atlikta sėkmingai.', 'success')
+        flash('Sėkmingai pridėtas automobilis.', 'success')
         return redirect(url_for('home'))
     return render_template('ivedimas.html', form=form, current_user=current_user)
 
-@app.route('/irasai')
+@app.route('/automobilis') #visos vartotojo masinos
 @login_required
-def records():
-    page = request.args.get('page', 1, type=int)
-    visi_masinos = Masina.query.filter_by(vartotojas_id=current_user.id).paginate(page=page, per_page=5)
-    return render_template("irasai.html", visi_masinos=visi_masinos)
+def automobilis():
+    visi_masinos = Masina.query.filter_by(vartotojas_id=current_user.id)
+    return render_template("automobilis.html", visi_masinos=visi_masinos)
 
-@app.route('/irasas', methods=['GET', 'POST'])
+@app.route("/records/<int:id>", methods=['GET', 'POST'])
 @login_required
-def irasas():
+def records(id):
+    masina = Masina.query.filter_by(id=id).first()
+    visi_irasai = Irasas.query.filter_by(masina_id=id)
+    return render_template("irasai.html", visi_irasai=visi_irasai, datetime=datetime, masina=masina)
+
+@app.route('/naujas_irasas', methods=['GET', 'POST'])
+@login_required
+def new_post():
+    flash('Čia galite užregistruoti naują gedimą', 'info')
+    visi_masinos = Masina.query.filter_by(vartotojas_id=current_user.id)
     form = forms.IrasasForma()
     if form.validate_on_submit():
+        masina = Masina.query.filter_by(gamintojas=form.gamintojas.data).first()
         naujas_irasas = Irasas(
+            masina_id = masina.id,
             problema = form.problema.data,
-            masina_id = form.masina.data.id,
-            statusas = form.statusas.data,
-            suma = form.suma.data
         )
         db.session.add(naujas_irasas)
         db.session.commit()
-        flash('Duomenys atnaujinti', 'success')
+        flash('Užregistruota.', 'success')
         return redirect(url_for('home'))
-    # naujas_irasas = Irasas.query.all()
-    return render_template("irasas.html", form=form, datetime=datetime)
+    return render_template("naujas_irasas.html", form=form, current_user=current_user, visi_masinos=visi_masinos)
 
+@app.route("/visi_irasai", methods=['GET', 'POST'])
+@login_required
+def all_records():
+    if current_user.is_darbuotojas:
+        visi_masinos = Masina.query.all()
+        visi_irasai = Irasas.query.order_by(Irasas.problema).all()
+        return render_template("visi_irasai.html", visi_irasai=visi_irasai, datetime=datetime, visi_masinos=visi_masinos)
+
+@app.route('/iraso_koregavimas/<int:id>', methods=['GET', 'POST'])
+@login_required
+def iraso_koregavimas(id):
+    if current_user.is_darbuotojas:
+        irasas = Irasas.query.filter_by(id=id).first()
+        form = forms.TaisomasGedimasForm()
+        if form.validate_on_submit():
+            irasas.suma = form.suma.data
+            irasas.problema = form.problema.data
+            irasas.statusas = form.statusas.data
+            db.session.commit()
+            flash('Irasas atnaujintas!', 'success')
+            return redirect(url_for('all_records'))
+        elif request.method == "GET":
+            form.suma.data = irasas.suma
+            form.problema.data = irasas.problema
+            form.statusas.data = irasas.statusas
+    else:
+        return redirect(url_for('home'))
+    return render_template('koregavimas.html', current_user=current_user, form=form, irasas=irasas)
 
 
 @app.errorhandler(404)
@@ -154,3 +189,4 @@ def klaida_403(klaida):
 @app.errorhandler(404)
 def klaida_500(klaida):
     return render_template("klaida.html", klaida=500), 500
+   

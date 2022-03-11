@@ -15,10 +15,11 @@
             {% block meniukas %}
             <ul class="navbar-nav">
                 <li class="nav-item"><a class="nav-link" href="{{ url_for('home') }}">Home</a></li>
-                {% if current_user and current_user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('ivedimas') }}">Technikos registravimas</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('records') }}">Irasai</a></li>
-                    
+                {% if current_user and current_user.is_authenticated and not current_user.is_darbuotojas %}
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('automobilis') }}">Mano parkas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('ivedimas') }}">Nauja technika</a></li>
+                {% endif %}
+                {% if current_user and current_user.is_authenticated %}                  
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('profilis') }}">Profilis</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('atsijungimas') }}">Atsijungti</a></li>
                 {% else %}
@@ -29,7 +30,7 @@
                     <li class="nav-item"><a class="nav-link" href="{{ url_for('admin') }}">Administravimas</a></li>
                 {% endif %}
                 {% if current_user and current_user.is_darbuotojas %}
-                    <li class="nav-item"><a class="nav-link" href="{{ url_for('irasas') }}">Statusas</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url_for('all_records') }}">Duomenų bazė</a></li>
                 {% endif %}
             </ul>
             {% endblock meniukas %}
@@ -47,7 +48,7 @@
             {% endblock messages %}
 
             {% block content %}
-            Hello :)
+            Prašome prisijugnti, kad galėtumte naudotis visomis paslaugomis arba tęskite darbą toliau arba atsijunkite.
             {% endblock content %}
         </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>

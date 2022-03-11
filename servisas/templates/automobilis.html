@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if visi_masinos %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Detaliau</th>
+                <th scope="col" class="text-center">Marke</th>
+                <th scope="col" class="text-center">Modelis</th>
+                <th scope="col" class="text-center">Variklis</th>
+                <th scope="col" class="text-center">Vin numeris</th>
+                <th scope="col" class="text-center">Valstybinis numeris</th>
+            </tr>
+        </thead>
+    {% for masina in visi_masinos %}<tr>
+        <td scope="row"><a role="button" class="btn btn-info btn-sm float-left" href="http://127.0.0.1:5000/records/{{masina.id}}">[Spausti]</a></td>
+        <td class="text-center">{{ masina.gamintojas }}</td>
+        <td class="text-center">{{ masina.modelis }}</td>
+        <td class="text-center">{{ masina.variklis }}</td>
+        <td class="text-center">{{ masina.reg_nr }}</td>
+        <td class="text-center">{{ masina.valst_nr }}</td>
+    </tr>{% endfor %}
+    </table>
+
+{% endif %}
+<a role="button" class="btn btn-primary btn-warning btn-lg btn-block" href="{{ url_for('new_post') }}">[Registruoti mašiną remonto darbams]</a>
+{% endblock content %}

@@ -61,15 +61,22 @@ class IvedimoForma(FlaskForm):
     submit = SubmitField('Registruoti')
 
 
-def car_query():
-    return models.Masina.query.all()
+# def car_query():
+#     return models.Masina.query.all()
 
 class IrasasForma(FlaskForm):
     problema = StringField('Gedimo aprasymas', [DataRequired()])
-    masina = QuerySelectField('Pasirinkite automobili',
-        query_factory=car_query, 
-        allow_blank=False, 
-        get_label=lambda obj: str(f'{obj.gamintojas} {obj.modelis}, {obj.reg_nr}'), )
-    statusas = SelectField('Statusas', choices=['naujas','priimta', 'taisoma', 'sutaisyta', 'grazinama', 'atiduota'], default="naujas")
+    suma = IntegerField('Kaina', default=0)
+    gamintojas = StringField('Gamintojas', [DataRequired()])
+    # masina = QuerySelectField('Pasirinkite automobili',
+    #     query_factory=car_query, 
+    #     allow_blank=False, 
+    #     get_label=lambda obj: str(f'{obj.gamintojas} {obj.modelis}, {obj.reg_nr}'), )
+    submit = SubmitField('Issaugoti')
+
+class TaisomasGedimasForm(FlaskForm):
+    problema = StringField('Gedimo aprasymas', [DataRequired()])
+    statusas = StringField('Remonto statusas', [DataRequired()])
+    # statusas = SelectField('Statusas', choices=['naujas','priimta', 'taisoma', 'sutaisyta', 'grazinama', 'atiduota'], default="naujas")
     suma = IntegerField('Kaina', default=0)
     submit = SubmitField('Issaugoti')
